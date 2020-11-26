@@ -64,7 +64,7 @@ def chech_if_right(coordinates, maze):
 #     return maze
 
 
-population = 200
+population = 1000
 mutation = 0.05
 alg = pyeasyga.GeneticAlgorithm(data, population_size= population, mutation_probability= mutation, elitism= True)
 
@@ -135,12 +135,11 @@ def fitness_1(item, data):
 
     return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
-
-alg.fitness_function = fitness_1
+alg.fitness_function = fitness_2
 alg.create_first_generation()
 alg.calculate_population_fitness()
 t = []
-for i in range(100):
+for i in range(1000):
     alg.create_next_generation()
     t.append(alg.current_generation)
 print(alg.best_individual())
