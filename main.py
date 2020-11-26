@@ -1,5 +1,5 @@
 from pyeasyga import pyeasyga
-import numpy as np
+from matplotlib import pyplot as plt
 
 how_many_moves = 40
 data_temp = [{'bit': '1'}]
@@ -11,7 +11,7 @@ for i in range(how_many_moves*2):
 def create_maze(size = None):
     maze = []
     maze.append(['#','#','#','#','#','#','#','#','#','#','#','#'])
-    maze.append(['#','S',' ','#',' ',' ',' ','#',' ',' ',' ','#'])
+    maze.append(['#','S',' ',' ','#',' ',' ',' ','#',' ',' ','#'])
     maze.append(['#','#','#',' ',' ',' ','#',' ','#','#',' ','#',])
     maze.append(['#',' ',' ',' ','#',' ','#',' ',' ',' ',' ','#',])
     maze.append(['#',' ','#',' ','#','#',' ',' ','#','#',' ','#',])
@@ -69,7 +69,7 @@ mutation = 0.05
 alg = pyeasyga.GeneticAlgorithm(data, population_size= population, mutation_probability= mutation, elitism= True)
 
 
-def fitness(item, data):
+def fitness_1(item, data):
     maze = create_maze()
     moves = glue(item, data)
     position, end = start_end(maze)
@@ -82,7 +82,7 @@ def fitness(item, data):
             x = chech_if_right(temp_position, maze)
 
             if x == 0:
-                return -(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -96,7 +96,7 @@ def fitness(item, data):
             x = chech_if_right(temp_position, maze)
 
             if x == 0:
-                return -(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -105,12 +105,12 @@ def fitness(item, data):
                 sum_moves = sum_moves - 1
                 temp_position = list(position)
 
-        elif move == '00': #up
-            temp_position[1] = position[1] - 1
+        elif move == '00': #down
+            temp_position[1] = position[1] + 1
             x = chech_if_right(temp_position, maze)
 
             if x == 0:
-                return -(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -119,12 +119,12 @@ def fitness(item, data):
                 sum_moves = sum_moves -1
                 temp_position = list(position)
 
-        elif move == '11': #down
-            temp_position[1] = position[1] + 1
+        elif move == '11': #up
+            temp_position[1] = position[1] - 1
             x = chech_if_right(temp_position, maze)
 
             if x == 0:
-                return -(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -133,9 +133,39 @@ def fitness(item, data):
                 sum_moves = sum_moves - 1
                 temp_position = list(position)
 
-    return -(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+    return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
-# class new_ga(pyeasyga.GeneticAlgorithm):
-alg.fitness_function = fitness
-alg.run()
+
+alg.fitness_function = fitness_1
+alg.create_first_generation()
+alg.calculate_population_fitness()
+t = []
+for i in range(100):
+    alg.create_next_generation()
+    t.append(alg.current_generation)
 print(alg.best_individual())
+
+value_mean = []
+value = 0
+value_max = []
+max = 0
+for generation in t:
+    for i in generation:
+        value = value + i.fitness
+        if i.fitness > max:
+            max = i.fitness
+
+    value_mean.append(value/population)
+
+    value_max.append(max)
+    value = 0
+    max = 0
+print(value_mean)
+print(value_max)
+
+plt.plot(value_mean)
+plt.plot(value_max)
+plt.xlabel('Numer interacji')
+plt.ylabel('Wartosc funkcji fitness')
+plt.legend(["srednia", "max"])
+plt.show()
