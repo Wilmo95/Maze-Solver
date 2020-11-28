@@ -1,32 +1,33 @@
 from pyeasyga import pyeasyga
 from matplotlib import pyplot as plt
+import time
 
 how_many_moves = 40
 data_temp = [{'bit': '1'}]
 data = []
-for i in range(how_many_moves*2):
+for i in range(how_many_moves * 2):
     data.append(data_temp[0])
 
 
-def create_maze(size = None):
+def create_maze(size=None):
     maze = []
-    maze.append(['#','#','#','#','#','#','#','#','#','#','#','#'])
-    maze.append(['#','S',' ',' ','#',' ',' ',' ','#',' ',' ','#'])
-    maze.append(['#','#','#',' ',' ',' ','#',' ','#','#',' ','#',])
-    maze.append(['#',' ',' ',' ','#',' ','#',' ',' ',' ',' ','#',])
-    maze.append(['#',' ','#',' ','#','#',' ',' ','#','#',' ','#',])
-    maze.append(['#',' ',' ','#','#',' ',' ',' ','#',' ',' ','#',])
-    maze.append(['#',' ',' ',' ',' ',' ','#',' ',' ',' ','#','#',])
-    maze.append(['#',' ','#',' ',' ','#','#',' ','#',' ',' ','#',])
-    maze.append(['#',' ','#','#','#',' ',' ',' ','#','#',' ','#',])
-    maze.append(['#',' ','#',' ','#','#',' ','#',' ','#',' ','#',])
-    maze.append(['#',' ','#',' ',' ',' ',' ',' ',' ',' ','E','#'])
-    maze.append(['#','#','#','#','#','#','#','#','#','#','#','#'])
+    maze.append(['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'])
+    maze.append(['#', 'S', ' ', ' ', '#', ' ', ' ', ' ', '#', ' ', ' ', '#'])
+    maze.append(['#', '#', '#', ' ', ' ', ' ', '#', ' ', '#', '#', ' ', '#', ])
+    maze.append(['#', ' ', ' ', ' ', '#', ' ', '#', ' ', ' ', ' ', ' ', '#', ])
+    maze.append(['#', ' ', '#', ' ', '#', '#', ' ', ' ', '#', '#', ' ', '#', ])
+    maze.append(['#', ' ', ' ', '#', '#', ' ', ' ', ' ', '#', ' ', ' ', '#', ])
+    maze.append(['#', ' ', ' ', ' ', ' ', ' ', '#', ' ', ' ', ' ', '#', '#', ])
+    maze.append(['#', ' ', '#', ' ', ' ', '#', '#', ' ', '#', ' ', ' ', '#', ])
+    maze.append(['#', ' ', '#', '#', '#', ' ', ' ', ' ', '#', '#', ' ', '#', ])
+    maze.append(['#', ' ', '#', ' ', '#', '#', ' ', '#', ' ', '#', ' ', '#', ])
+    maze.append(['#', ' ', '#', ' ', ' ', ' ', ' ', ' ', ' ', ' ', 'E', '#'])
+    maze.append(['#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#', '#'])
 
     return maze
 
-def glue(chosen, bits):
 
+def glue(chosen, bits):
     moves_temp = []
     moves = []
     for i in chosen:
@@ -35,9 +36,10 @@ def glue(chosen, bits):
         else:
             moves_temp.append('0')
     for ele in range(0, len(moves_temp), 2):
-        moves.append(moves_temp[ele] + moves_temp[ele+1])
+        moves.append(moves_temp[ele] + moves_temp[ele + 1])
 
     return moves
+
 
 def start_end(maze):
     start = []
@@ -45,19 +47,21 @@ def start_end(maze):
     for i in range(len(maze)):
         for j in range(len(maze[i])):
             if maze[i][j] == 'S':
-                start = [i,j]
+                start = [i, j]
             if maze[i][j] == 'E':
-                end = [i,j]
+                end = [i, j]
 
     return start, end
 
-def chech_if_right(coordinates, maze):
+
+def check_if_right(coordinates, maze):
     if maze[coordinates[0]][coordinates[1]] == 'E':
         return 0
     elif maze[coordinates[0]][coordinates[1]] == ' ':
         return 1
     else:
         return -1
+
 
 # def swap(pos1, pos2, maze):
 #     maze[pos1[0]][pos1[1]], maze[pos2[0]][pos2[1]] = maze[pos2[0]][pos2[1]], maze[pos1[0]][pos1[1]]
@@ -66,7 +70,8 @@ def chech_if_right(coordinates, maze):
 
 population = 1000
 mutation = 0.05
-alg = pyeasyga.GeneticAlgorithm(data, population_size= population, mutation_probability= mutation, elitism= True)
+alg = pyeasyga.GeneticAlgorithm(data, population_size=population, mutation_probability=mutation, elitism=True)
+
 
 def fitness_2(item, data):
     maze = create_maze()
@@ -76,12 +81,12 @@ def fitness_2(item, data):
 
     for move in moves:
 
-        if move == '10': #left
+        if move == '10':  # left
             temp_position[0] = position[0] - 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 1000
+                return 200
 
             elif x == 1:
                 position = list(temp_position)
@@ -89,12 +94,12 @@ def fitness_2(item, data):
             else:
                 return 0
 
-        elif move == '01': #right
+        elif move == '01':  # right
             temp_position[0] = position[0] + 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 1000
+                return 200
 
             elif x == 1:
                 position = list(temp_position)
@@ -102,12 +107,12 @@ def fitness_2(item, data):
             else:
                 return 0
 
-        elif move == '00': #down
+        elif move == '00':  # down
             temp_position[1] = position[1] + 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 1000
+                return 200
 
             elif x == 1:
                 position = list(temp_position)
@@ -115,12 +120,12 @@ def fitness_2(item, data):
             else:
                 return 0
 
-        elif move == '11': #up
+        elif move == '11':  # up
             temp_position[1] = position[1] - 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 1000
+                return 200
 
             elif x == 1:
                 position = list(temp_position)
@@ -128,7 +133,10 @@ def fitness_2(item, data):
             else:
                 return 0
 
-    return 1000-sum(abs(a - b) for a, b in zip(position, end))
+    return 100 - sum(abs(a - b) for a, b in zip(position, end))
+
+
+start_time = time.time()
 
 alg.fitness_function = fitness_2
 alg.create_first_generation()
@@ -149,13 +157,16 @@ for generation in t:
         if i.fitness > max:
             max = i.fitness
 
-    value_mean.append(value/population)
+    value_mean.append(value / population)
 
     value_max.append(max)
     value = 0
     max = 0
 print(value_mean)
 print(value_max)
+
+print(f'{time.time() - start_time} seconds')
+print(f'{(time.time() - start_time) / 60} minutes')
 
 plt.plot(value_mean)
 plt.plot(value_max)

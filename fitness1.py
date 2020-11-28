@@ -1,5 +1,6 @@
 from pyeasyga import pyeasyga
 from matplotlib import pyplot as plt
+import time
 
 how_many_moves = 40
 data_temp = [{'bit': '1'}]
@@ -51,7 +52,7 @@ def start_end(maze):
 
     return start, end
 
-def chech_if_right(coordinates, maze):
+def check_if_right(coordinates, maze):
     if maze[coordinates[0]][coordinates[1]] == 'E':
         return 0
     elif maze[coordinates[0]][coordinates[1]] == ' ':
@@ -64,7 +65,7 @@ def chech_if_right(coordinates, maze):
 #     return maze
 
 
-population = 1000
+population = 100
 mutation = 0.05
 alg = pyeasyga.GeneticAlgorithm(data, population_size= population, mutation_probability= mutation, elitism= True)
 
@@ -79,10 +80,10 @@ def fitness_1(item, data):
 
         if move == '10': #left
             temp_position[0] = position[0] - 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 200-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -93,10 +94,10 @@ def fitness_1(item, data):
 
         elif move == '01': #right
             temp_position[0] = position[0] + 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 200-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -107,10 +108,10 @@ def fitness_1(item, data):
 
         elif move == '00': #down
             temp_position[1] = position[1] + 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 200-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -121,10 +122,10 @@ def fitness_1(item, data):
 
         elif move == '11': #up
             temp_position[1] = position[1] - 1
-            x = chech_if_right(temp_position, maze)
+            x = check_if_right(temp_position, maze)
 
             if x == 0:
-                return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
+                return 200-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
             elif x == 1:
                 position = list(temp_position)
@@ -135,11 +136,13 @@ def fitness_1(item, data):
 
     return 100-(sum(abs(a - b) for a, b in zip(position, end)))+sum_moves
 
-alg.fitness_function = fitness_2
+start_time = time.time()
+
+alg.fitness_function = fitness_1
 alg.create_first_generation()
 alg.calculate_population_fitness()
 t = []
-for i in range(1000):
+for i in range(100):
     alg.create_next_generation()
     t.append(alg.current_generation)
 print(alg.best_individual())
@@ -161,6 +164,9 @@ for generation in t:
     max = 0
 print(value_mean)
 print(value_max)
+
+print(f'{time.time() - start_time} seconds')
+print(f'{(time.time() - start_time)/60} minutes')
 
 plt.plot(value_mean)
 plt.plot(value_max)
