@@ -1,2 +1,2 @@
-# IO-Project-1
+# Maze-Solver
 Maze solver in Python with GA
