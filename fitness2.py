@@ -68,8 +68,9 @@ def check_if_right(coordinates, maze):
 #     return maze
 
 
-population = 1000
-mutation = 0.05
+population = 5000
+generations = 100
+mutation = 0.01
 alg = pyeasyga.GeneticAlgorithm(data, population_size=population, mutation_probability=mutation, elitism=True)
 
 
@@ -92,7 +93,7 @@ def fitness_2(item, data):
                 position = list(temp_position)
 
             else:
-                return 0
+                return 100 - (sum(abs(a - b) for a, b in zip(position, end)))
 
         elif move == '01':  # right
             temp_position[0] = position[0] + 1
@@ -105,7 +106,7 @@ def fitness_2(item, data):
                 position = list(temp_position)
 
             else:
-                return 0
+                return 100 - (sum(abs(a - b) for a, b in zip(position, end)))
 
         elif move == '00':  # down
             temp_position[1] = position[1] + 1
@@ -118,7 +119,7 @@ def fitness_2(item, data):
                 position = list(temp_position)
 
             else:
-                return 0
+                return 100 - (sum(abs(a - b) for a, b in zip(position, end)))
 
         elif move == '11':  # up
             temp_position[1] = position[1] - 1
@@ -131,7 +132,7 @@ def fitness_2(item, data):
                 position = list(temp_position)
 
             else:
-                return 0
+                return 100 - (sum(abs(a - b) for a, b in zip(position, end)))
 
     return 100 - sum(abs(a - b) for a, b in zip(position, end))
 
@@ -142,7 +143,7 @@ alg.fitness_function = fitness_2
 alg.create_first_generation()
 alg.calculate_population_fitness()
 t = []
-for i in range(1000):
+for i in range(generations):
     alg.create_next_generation()
     t.append(alg.current_generation)
 print(alg.best_individual())
@@ -166,7 +167,7 @@ print(value_mean)
 print(value_max)
 
 print(f'{time.time() - start_time} seconds')
-print(f'{(time.time() - start_time) / 60} minutes')
+print(f'{(time.time() - start_time)/60} minutes')
 
 plt.plot(value_mean)
 plt.plot(value_max)
