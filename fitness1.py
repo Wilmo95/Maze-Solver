@@ -65,7 +65,7 @@ def check_if_right(coordinates, maze):
 #     return maze
 
 
-population = 100
+population = 1000
 generations = 100
 mutation = 0.01
 alg = pyeasyga.GeneticAlgorithm(data, population_size= population, mutation_probability= mutation, elitism= True)
@@ -172,6 +172,6 @@ print(f'{(time.time() - start_time)/60} minutes')
 plt.plot(value_mean)
 plt.plot(value_max)
 plt.xlabel('Numer interacji')
-plt.ylabel('Wartosc funkcji fitness')
+plt.ylabel('Wartosc funkcji fitness1')
 plt.legend(["srednia", "max"])
 plt.show()
